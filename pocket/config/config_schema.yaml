@@ -1,0 +1,17 @@
+name: str()
+image: str()
+actions: list(include('copy_'), include('run_'), required=False)
+limit: include('limit_', required=False)
+expose: int(min=1024,max=49151, required=False)
+---
+copy_:
+  copy:
+    src: str()
+    dest: str()
+
+run_:
+  run: str()
+
+limit_:
+  cpu: int(min=1,max=100,required=False)
+  mem: int(min=128,max=2048,required=False)
