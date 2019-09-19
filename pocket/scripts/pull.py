@@ -21,7 +21,7 @@ class Pull():
 
         return token
 
-    def manifest(self):
+    def get_manifest(self):
         print("Requesting manifest for %s..." % (self.image))
         manifest_request_url = '%s/%s/%s/manifests/%s' % (BASE_URL, self.library, self.image, self.tag)
         manifest_request_response = requests.get(manifest_request_url, headers=self.headers)
