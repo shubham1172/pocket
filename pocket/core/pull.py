@@ -62,6 +62,3 @@ class Pull():
                 for chunk in layer_request_response.iter_content(1024):
                     layer_file.write(chunk)
         console.ok('All layers successfully received!')
-
-p = Pull('ubuntu', '18.04')
-p.run()
