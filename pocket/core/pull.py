@@ -8,9 +8,12 @@ BASE_URL = 'https://registry-1.docker.io/v2'
 
 
 class Pull:
-    def __init__(self, arg, tag='latest'):
-        self.image = arg
-        self.tag = tag
+    def __init__(self, image):
+        if ':' in image:
+            self.image, self.tag = image.split(':')
+        else:
+            self.image = image
+            self.tag = 'latest'
         self.headers = {'Authorization': 'Bearer %s' % self.auth(self.image)}
         if not os.path.exists(fs.get_path_to_images()):
             os.makedirs(fs.get_path_to_images())
