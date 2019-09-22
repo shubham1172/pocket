@@ -34,15 +34,19 @@ class Pull():
 
         return manifest
 
-    def run(self, arg):
+    def run(self):
         # get manifest
         manifest = self.get_manifest()
         # save manifest
-        with open(os.path.join(PATH_TO_IMAGES, manifest['name'].replace('/','_')+'.json'), 'w') as manifest_file:
+        manifest_name = manifest['name'].lstrip('library/')+':'+self.tag
+        path_to_manifest = os.path.join(PATH_TO_IMAGES, manifest_name)
+        if not os.path.exists(path_to_manifest):
+            os.makedirs(path_to_manifest)
+        with open(os.path.join(path_to_manifest, manifest_name+'.json'), 'w') as manifest_file:
             manifest_file.write(json.dumps(manifest))
 
         # save layers
-        layers_path = os.path.join(PATH_TO_IMAGES, manifest['name'].replace('/','_'), 'layers')
+        layers_path = os.path.join(path_to_manifest, 'layers')
         if not os.path.exists(layers_path):
             os.makedirs(layers_path)
         layers = [layer['blobSum'] for layer in manifest['fsLayers']]
@@ -57,6 +61,7 @@ class Pull():
             with open(tarfile_name, 'wb') as layer_file:
                 for chunk in layer_request_response.iter_content(1024):
                     layer_file.write(chunk)
-            with tarfile.open(tarfile_name, 'r') as layer_tarfile:
-                layer_tarfile.extractall(layers_path)
         console.ok('All layers successfully received!')
+
+p = Pull('ubuntu', '18.04')
+p.run()
