@@ -5,21 +5,19 @@ import tarfile
 from pocket.utils import console
 
 BASE_URL = 'https://registry-1.docker.io/v2'
-homedir = os.environ['HOME']
-PATH_TO_IMAGES = os.path.join(homedir, '.pocket/images')
+PATH_TO_IMAGES = os.path.join(os.environ['HOME'], '.pocket/images')
 
 class Pull():
 
     def __init__ (self, arg, tag='latest'):
             self.image = arg
             self.tag = tag
-            self.library = 'library'
-            self.headers = {'Authorization': 'Bearer %s' % self.auth(self.image, self.library)}
+            self.headers = {'Authorization': 'Bearer %s' % self.auth(self.image)}
             if not os.path.exists(PATH_TO_IMAGES):
                 os.makedirs(PATH_TO_IMAGES)
 
-    def auth(self, image, library):
-        token_request_url = 'https://auth.docker.io/token?service=registry.docker.io&scope=repository:%s/%s:pull' % (library, image)
+    def auth(self, image):
+        token_request_url = 'https://auth.docker.io/token?service=registry.docker.io&scope=repository:library/%s:pull' % (image)
         token_request_response = requests.get(token_request_url)
         token = token_request_response.json()['token']
 
