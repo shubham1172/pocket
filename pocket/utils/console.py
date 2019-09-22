@@ -1,6 +1,7 @@
 from enum import Enum
 import sys
 
+
 class Colors(Enum):
     BLUE = '\033[94m'
     GREEN = '\033[92m'
@@ -12,8 +13,10 @@ class Colors(Enum):
 def __print_color(color: Colors, message, *args, **kwargs):
     print(color.value + message + Colors.END.value, *args, **kwargs)
 
+
 def log(message, *args, **kwargs):
     print(message, *args, **kwargs)
+
 
 def error(message, *args, **kwargs):
     __print_color(Colors.RED, message, *args, file=sys.stderr, **kwargs)
