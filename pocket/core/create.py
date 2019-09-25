@@ -13,10 +13,6 @@ def create(config_path):
     """
     config = Config(config_path)
     base_image = config.args['image']
-
-    if ":" not in base_image:
-        base_image = f'{base_image}:latest'
-
     container_id = str(uuid.uuid4())
     console.log('creating a new container (%s)' % container_id)
 
