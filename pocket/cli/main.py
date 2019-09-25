@@ -1,4 +1,5 @@
 import click
+from pocket.core.create import create as pocket_create
 
 
 @click.group()
@@ -8,8 +9,8 @@ def cli():
 
 @cli.command(help="create a new pocket")
 @click.argument("config")
-def create():
-    pass
+def create(config):
+    pocket_create(config)
 
 
 @cli.command(help="run a command in a pocket")

@@ -16,3 +16,7 @@ class Config:
             raise
 
         self.args = data[0][0]
+
+        # ensure that there is a tag
+        if ":" not in self.args['image']:
+            self.args['image'] = f'{self.args["image"]}:latest'
