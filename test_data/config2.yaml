@@ -1,11 +1,10 @@
 name: my-container
 image: ubuntu:18.04
-actions:
-  - copy:
-      dest: /tmp/
-  - run: sleep 10
-  - run: echo "hello, world"
-  - copy:
-      src: ./source2
-      dest: /tmp/source2
+copy:
+  dest: /tmp/
+- src: ./source2
+  dest: /opt/
+run:
+  - sleep 10
+  - echo "hello, world!"
 expose: 8080
