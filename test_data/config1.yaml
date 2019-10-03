@@ -1,15 +1,18 @@
 name: my-container
 image: ubuntu:18.04
-actions:
-  - copy:
-      src: ./source1
-      dest: /tmp/
-  - run: sleep 10
-  - run: echo "hello, world"
-  - copy:
-      src: ./source2
-      dest: /tmp/source2
+copy:
+- src: ./source1
+  dest: /tmp/
+- src: ./source2
+  dest: /opt/
+run:
+  - sleep 10
+  - echo "hello, world!"
 limit:
   cpu: 10
   mem: 200
 expose: 8080
+env:
+  PATH: /bin/
+  USERNAME: johndoe
+  PASSWORD: wordpass
