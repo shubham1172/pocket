@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 import tarfile
 from pocket.core.pull import Pull
 
@@ -8,6 +9,10 @@ BASE_PATH = os.path.join('/opt', 'pocket')
 
 def get_path_to_images():
     return os.path.join(BASE_PATH, 'images')
+
+
+def get_path_to_containers():
+    return os.path.join(BASE_PATH, 'containers')
 
 
 def get_path_to_manifest(manifest_name):
@@ -45,7 +50,7 @@ def _mount(src, dest=None, _type=None, options=None, flags=None):
     _type_string = "-t {}".format(_type) if _type else ""
     flags_string = flags if flags else ""
     dest_string = dest if dest else ""
-    os.system('mount {} {} {} {} {}'.format(options_string, _type_string, flags_string, src, dest_string))
+    os.system(f'mount {options_string} {_type_string} {flags_string} {src} {dest_string}')
 
 
 def _unmount(path):
@@ -53,7 +58,7 @@ def _unmount(path):
     Un-mount a file system
     :param path: path to un-mount
     """
-    os.system(f'umount {path}')
+    subprocess.run(['umount', path])
 
 
 def setup_fs(image, container_id):
@@ -71,8 +76,6 @@ def setup_fs(image, container_id):
         Pull(image).run()
     _extract(get_path_to_layers(image), path_to_container)
     _mount('/proc', os.path.join(get_path_to_container(container_id), 'proc'), _type='proc')
-    _mount('/sys', os.path.join(get_path_to_container(container_id), 'sys'), options='bind')
-    _mount('/dev', os.path.join(get_path_to_container(container_id), 'dev'), options='bind')
 
 
 def clean_fs(container_id):
@@ -84,6 +87,14 @@ def clean_fs(container_id):
     """
     path_to_container = get_path_to_container(container_id)
     _unmount(os.path.join(path_to_container, "proc"))
-    _unmount(os.path.join(path_to_container, "sys"))
-    _unmount(os.path.join(path_to_container, "dev"))
     shutil.rmtree(path_to_container)
+
+
+def copy_to_container(src, dest, container_id):
+    """
+    copy stuff from outside to container
+    :param src: src location
+    :param dest: dest in container
+    :param container_id:
+    """
+    shutil.copy(src, os.path.join(get_path_to_container(container_id), dest))
