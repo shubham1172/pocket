@@ -1,3 +1,4 @@
+import cgroups
 import os
 import unshare
 import uuid
@@ -23,6 +24,14 @@ def create(config_path):
         # container process
         console.log('Spinning up a filesystem...')
         fs.setup_fs(base_image, container_id)
+
+        # set up the cgroup
+        cg = cgroups.Cgroup(container_id)
+        if 'limit' in config.args.keys():
+            if 'cpu' in config.args['limit'].keys():
+                cg.set_cpu_limit(config.args['limit']['cpu'])
+            if 'mem' in config.args['limit'].keys():
+                cg.set_memory_limit(config.args['limit']['mem'])
 
         for item in config.args.get('copy', []):
             console.log(f'{container_id}: copying {item["src"]} to {item["dest"]}')
