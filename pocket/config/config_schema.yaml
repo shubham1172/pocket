@@ -12,4 +12,4 @@ copy_:
 
 limit_:
   cpu: int(min=1,max=100,required=False)
-  mem: int(min=128,max=2048,required=False)
+  mem: int(min=1,max=2048,required=False)
