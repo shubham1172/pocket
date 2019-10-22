@@ -24,7 +24,7 @@ def run():
 
 
 @cli.command(help="remove a pocket")
-@click.option("--all", is_flag=True)
+@click.option("-a", "--all", is_flag=True)
 @click.option("--pid", type=str)
 def rm(all, pid):
     if all:
@@ -46,8 +46,9 @@ def log():
 
 
 @cli.command(help="list all pockets")
-def ls():
-    pocket_list()
+@click.option("-q", "--quiet", is_flag=True)
+def ls(quiet):
+    pocket_list(quiet)
 
 
 if __name__ == '__main__':
