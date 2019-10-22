@@ -33,6 +33,8 @@ def create(config_path):
             if 'mem' in config.args['limit'].keys():
                 cg.set_memory_limit(config.args['limit']['mem'])
 
+        cg.add(os.getpid())
+
         for item in config.args.get('copy', []):
             console.log(f'{container_id}: copying {item["src"]} to {item["dest"]}')
             fs.copy_to_container(item['src'], item['dest'], container_id)
