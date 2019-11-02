@@ -24,10 +24,10 @@ def run():
 
 
 @cli.command(help="remove a pocket")
-@click.option("-a", "--all", is_flag=True)
+@click.option("-a", "--all", 'all_', is_flag=True)
 @click.option("--pid", type=str)
-def rm(all, pid):
-    if all:
+def rm(all_, pid):
+    if all_:
         if pid:
             console.error('PID should not be specified with --all parameter')
         else:
