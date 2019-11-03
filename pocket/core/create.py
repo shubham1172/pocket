@@ -40,13 +40,16 @@ def create(config_path):
         console.log('Pocket starting with process-id: %d' % os.getpid())
         cg.add(os.getpid())
 
-        os.system(f'hostname {container_id}')
         os.chroot(fs.get_path_to_container(container_id))
         os.chdir('/')
 
         unshare.unshare(unshare.CLONE_NEWUTS | unshare.CLONE_NEWNS | unshare.CLONE_NEWPID)
+
         pid2 = os.fork()
         if pid2 == 0:
+            fs.mount("/proc", "/proc", "proc")
+            os.system(f'/bin/hostname {container_id}')
+            # execute the commands
             for item in config.args.get('run', []):
                 console.log(f'{container_id}: executing - {item}')
                 os.execve(item.split(" ")[0], item.split(" "), config.args.get('env', {}))
@@ -54,4 +57,5 @@ def create(config_path):
             os.waitpid(pid2, 0)
     else:
         _, status = os.waitpid(pid, 0)
+        fs.unmount(os.path.join(fs.get_path_to_container(container_id), "proc"))
         console.log(f'Pocket pid: {pid} exited with status {status}')
