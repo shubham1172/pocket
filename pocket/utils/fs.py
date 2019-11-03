@@ -37,7 +37,7 @@ def _extract(source, dest):
             layer_tarfile.extractall(dest)
 
 
-def _mount(src, dest=None, _type=None, options=None, flags=None):
+def mount(src, dest=None, _type=None, options=None, flags=None):
     """
     Mount a file system
     :param src: source path
@@ -50,15 +50,15 @@ def _mount(src, dest=None, _type=None, options=None, flags=None):
     _type_string = "-t {}".format(_type) if _type else ""
     flags_string = flags if flags else ""
     dest_string = dest if dest else ""
-    os.system(f'mount {options_string} {_type_string} {flags_string} {src} {dest_string}')
+    os.system(f'/bin/mount {options_string} {_type_string} {flags_string} {src} {dest_string}')
 
 
-def _unmount(path):
+def unmount(path):
     """
     Un-mount a file system
     :param path: path to un-mount
     """
-    subprocess.run(['umount', path])
+    subprocess.run(['/bin/umount', path])
 
 
 def setup_fs(image, container_id):
@@ -66,7 +66,6 @@ def setup_fs(image, container_id):
     Set up the file system
     - pull image if required
     - extract tars in the container directory
-    - mount important directories
     :param image: name of the image:tag
     :param container_id:
     """
@@ -75,7 +74,6 @@ def setup_fs(image, container_id):
     if not os.path.isdir(get_path_to_manifest(image)):
         Pull(image).run()
     _extract(get_path_to_layers(image), path_to_container)
-    _mount('/proc', os.path.join(get_path_to_container(container_id), 'proc'), _type='proc')
 
 
 def clean_fs(container_id):
@@ -86,7 +84,6 @@ def clean_fs(container_id):
     :param container_id:
     """
     path_to_container = get_path_to_container(container_id)
-    _unmount(os.path.join(path_to_container, "proc"))
     shutil.rmtree(path_to_container)
 
 
