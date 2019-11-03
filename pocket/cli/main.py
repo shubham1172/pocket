@@ -1,6 +1,6 @@
 import click
 from pocket.core.create import create as pocket_create
-from pocket.core.list import list_ as pocket_list
+from pocket.core.list_ import list_ as pocket_list
 from pocket.core.rm import rm as pocket_rm, rm_all as pocket_rm_all
 from pocket.core.run import run as pocket_run
 from pocket.utils import console
