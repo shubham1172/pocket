@@ -59,6 +59,15 @@ def unmount(path):
     subprocess.run(['/bin/umount', path])
 
 
+def get_size_kb(path):
+    """
+    Get size of a directory in kilobytes
+    :param path: path to the directory
+    :return: size in bytes
+    """
+    return int(subprocess.run(['du', '-s', f'{path}'], stdout=subprocess.PIPE).stdout.decode('utf-8').split('\t')[0])
+
+
 def setup_fs(image, container_id):
     """
     Set up the file system
