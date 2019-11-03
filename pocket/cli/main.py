@@ -2,7 +2,9 @@ import click
 from pocket.core.create import create as pocket_create
 from pocket.core.list import list_ as pocket_list
 from pocket.core.rm import rm as pocket_rm, rm_all as pocket_rm_all
+from pocket.core.run import run as pocket_run
 from pocket.utils import console
+from pocket.utils import defaults
 
 
 @click.group()
@@ -19,8 +21,8 @@ def create(config):
 @cli.command(help="run a command in a pocket")
 @click.argument("pid")
 @click.argument("command")
-def run():
-    pass
+def run(pid, command):
+    pocket_run(pid, [command], defaults.ENVIRONMENT)
 
 
 @cli.command(help="remove a pocket")

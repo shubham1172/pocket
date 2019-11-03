@@ -3,16 +3,14 @@ import shutil
 import subprocess
 import tarfile
 from pocket.core.pull import Pull
-
-BASE_PATH = os.path.join('/opt', 'pocket')
-
+from pocket.utils import defaults
 
 def get_path_to_images():
-    return os.path.join(BASE_PATH, 'images')
+    return os.path.join(defaults.BASE_PATH, 'images')
 
 
 def get_path_to_containers():
-    return os.path.join(BASE_PATH, 'containers')
+    return os.path.join(defaults.BASE_PATH, 'containers')
 
 
 def get_path_to_manifest(manifest_name):
@@ -28,7 +26,7 @@ def get_path_to_manifest_file(manifest_name):
 
 
 def get_path_to_container(container_id):
-    return os.path.join(BASE_PATH, 'containers', container_id)
+    return os.path.join(defaults.BASE_PATH, 'containers', container_id)
 
 
 def _extract(source, dest):
@@ -74,6 +72,7 @@ def setup_fs(image, container_id):
     if not os.path.isdir(get_path_to_manifest(image)):
         Pull(image).run()
     _extract(get_path_to_layers(image), path_to_container)
+    mount("/dev", os.path.join(path_to_container, "dev"), flags="--bind")
 
 
 def clean_fs(container_id):
@@ -84,6 +83,7 @@ def clean_fs(container_id):
     :param container_id:
     """
     path_to_container = get_path_to_container(container_id)
+    unmount(os.path.join(path_to_container, "dev"))
     shutil.rmtree(path_to_container)
 
 
@@ -94,4 +94,8 @@ def copy_to_container(src, dest, container_id):
     :param dest: dest in container
     :param container_id:
     """
-    shutil.copy(src, os.path.join(get_path_to_container(container_id), dest))
+    if (os.path.isfile(src)):
+        shutil.copy2(src, os.path.join(get_path_to_container(container_id), dest))
+    else:
+        # dirty, try to use shutil.copytree
+        os.system(f'cp -R {src} {os.path.join(get_path_to_container(container_id), dest)}')
