@@ -18,6 +18,10 @@ steps:
   displayName: 'Install requirements.txt'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    sudo pip3 install pyinstaller
+    echo Creating a new distribution
+    pyinstaller pocket/cli/main.py
+  displayName: 'Create a linux distribution'
+
+- script: ls dist/
+  displayName: 'View distribution'
