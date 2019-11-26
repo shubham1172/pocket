@@ -39,3 +39,23 @@ EOF
 ```bash
 $ python3 -m pocket.cli.main create pocket.yaml
 ```
+
+- List all containers
+```bash
+$ python3 -m pocket.cli.main ls
+```
+
+- Run a command in a container
+```bash
+$ python3 -m pocket.cli.main run <container-id> <command>
+```
+
+- Delete a container
+```bash
+$ python3 -m pocket.cli.main rm <container-id>
+```
+
+- Delete all containers
+```bash
+$ python3 -m pocket.cli.main rm -a
+```
